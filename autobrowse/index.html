@@ -1,17 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>jquery.esn.autobrowse.js</title>
+    <title>jquery.esn.autobrowse.js</title>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css">
+    <style type="text/css">
+        html {
+            background-color: #000;
+        }
+        body {
+            font-family: arial;
+            background-color: #000;
+        }
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px;
+        }
+        h2 {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+        }
+        p {
+            font-size: 12px;
+            line-height: 18px;
+            padding: 10px;
+        }
+        div.bkg {
+            position: absolute;
+            left: 0; top: 0;
+            height: 400px;
+            width: 100%;
+            background-color: #000; /* for non-css3 browsers */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000'); /* for IE */
+            background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#000)); /* for webkit browsers */
+            background: -moz-linear-gradient(top,  #ccc,  #000); /* for firefox 3.6+ */
+        }
+        div.page {
+            position: relative;
+            background: white;
+            width: 760px;
+            margin: auto;
+            padding: 10px;
+        }
+        img.me {
+            float: left;
+            margin-right: 10px;
+        }
+        div.items {
+            padding: 10px;
+        }
+        div.items img {
+
+        }
+    </style>
 </head>
 <body>
-  <h2>Autobrowse jQuery plugin</h2>
-  <p>Nothing too see here yet</p>
-  <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
-  <script type="text/javascript" src="jquery.esn.autobrowse.js"></script>
-  <script type="text/javsacript">
-    $(function () {
-        console.debug("document loaded");
-    });
-  </script>
+<div class="bkg"></div>
+<div class="page">
+    <div style="clear: both;"></div>
+    <h1>Autobrowse jQuery plugin</h1>
+    <p>Download and more documentation: <a href="jquery.esn.autobrowse.js">jquery.esn.autobrowse.js</a></p>
+    <p><img class="me" height="48" width="48" alt="" src="http://www.gravatar.com/avatar/446d77c917d0c07ba598f56e5d08caa2?s=140&d=http%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <div class="items">
+    </div>
+
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery.esn.autobrowse.js"></script>
+    <script type="text/javascript" src="jstorage.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            
+            $(".page").autobrowse(
+                function (offset, count) { console.debug("building url"); return "http://services.digg.com/2.0/search.search?query=jquery&offset=OFFSET&count=COUNT&format=xml&callback=?".replace(/OFFSET/, offset).replace(/COUNT/, count);},
+                //function (offset, count) { console.debug("building url"); return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?".replace(/OFFSET/, offset).replace(/COUNT/, count) },
+                function (response) { console.debug(response); var markup=''; for (var i=0; i<response.items.length; i++) { markup+='<img src="'+response.items[i]+'" />' }; return markup; },
+                {
+                    itemsReturned: function (response) { return 10; },
+                    count: 10,
+                    offset: 0,
+                    totalCount: 100
+                });
+        });
+    </script>
+</div>
 </body>
 </html>

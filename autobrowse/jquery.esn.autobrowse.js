@@ -4,25 +4,45 @@
  * Creates a growing container that automatically fills its content via ajax requests, when the user scrolls to the
  * bottom of the container.
  *
- * Requires jStorage (http://www.jstorage.info/), if the useStorage option is set to true. WARNING: Experimental. It
+ * Requires jStorage (), if the useStorage option is set to true. WARNING: Experimental. It
  * doesn't work with original jStorage. 
  *
- * @param url Url to controller action where more data can be fetched (url/offset/count/ will be used to fetch more data)
- * @param template Template to be called with action json response
- * @param options Options that can be submitted to the plugin:
- * * offset        Offset for first ajax call to url
- * * count         How many items to fetch
- * * totalCount    Total number of items on server
- * * loader        Element, jQuery object or markup to represent loader
- * * itemsReturned Callback that is run on ajax json response to determine how many items was returned
- * * onComplete    Callback that is run when the element has been updated with new content. This is run before the
- *                 response is stored (if using useStorage), so it is possible to manipulate the response here before
- *                 it is stored.
- * * useStorage    If true, the plugin will use browser storage to keep the state between page reloads. If the user
- *                 clicks away from the page and then goes back, all items fetched will be rendered again.
+ * @param url       Callback to render url from offset and count arguments. 
+ *                  Example: function (offset, count) { return "http://baseurl/OFFSET/COUNT".replace(/OFFSET/, offset).replace(/COUNT/, count) }
+ * @param template  Callback to render markup from json response.
+ *                  Example: function (response) { var markup=''; for (var i=0; i<response.length; i++) { markup+='<img src="'+response[i]+'" />' } return markup; }
+ * @param options   Options that can be submitted to the plugin:
+ * * offset         Offset for first ajax call to url.
+ * * count          Number of items to fetch.
+ * * totalCount     Total number of items on server.
+ * * loader         Element, jQuery object or markup to represent loader. 
+ * * itemsReturned  Callback that is run on ajax json response to determine how many items was returned
+ * * onComplete     Callback that is run when the element has been updated with new content. This is run before the
+ *                  response is stored (if using useStorage), so it is possible to manipulate the response here before
+ *                  it is stored.
+ * * useStorage     If true, the plugin will use browser storage to keep the state between page reloads. If the user
+ *                  clicks away from the page and then goes back, all items fetched will be rendered again. Requires
+ *                  http://www.jstorage.info/. WARNING: This is experimental and doesn't work with original jStorage. 
+ *                  A modified version is available on http://msjolund.github.com/autobrowse/
+ *
+ *
+ *
+ *
+ *
+ * Example usage
+ * $(document.body).autobrowse(
+ *       function (offset, count) { return "http://baseurl/OFFSET/COUNT".replace(/OFFSET/, offset).replace(/COUNT/, count) },
+ *       function (response) { var markup=''; for (var i=0; i<response.length; i++) { markup+='<img src="'+response[i]+'" />' } return markup; },
+ *       {
+ *           offset: 10,
+ *           
+ *
+ *
+ *
+ *
  */
 
-jQuery.fn.autogrow = function (url, template, options)
+jQuery.fn.autobrowse = function (url, template, options)
 {
     var defaults = {
         offset: 0,
@@ -60,13 +80,14 @@ jQuery.fn.autogrow = function (url, template, options)
             var winBtmPos = scrollTop + jQuery(window).height();
             if (scrollTopUpdateTimer)
                 clearTimeout(scrollTopUpdateTimer);
-            scrollTopUpdateTimer = setTimeout(function () { $.jStorage.set("autogrowScrollTop", scrollTop); }, 200);
+            scrollTopUpdateTimer = setTimeout(function () { jQuery.jStorage.set("autobrowseScrollTop", scrollTop); }, 200);
             if (objBottom < winBtmPos && !loading && currentOffset <= options.totalCount)
             {
                 var loader = jQuery(options.loader);
                 loader.appendTo(obj);
                 loading = true;
-                jQuery.post(url + "/" + currentOffset + "/" + options.count, function (response) {
+                console.debug("calling", url(currentOffset, options.count));
+                jQuery.getJSON(url(currentOffset, options.count), function (response) {
                     // Check if this was the last items to fetch from the server, if so, stop listening
                     if (options.itemsReturned(response) + currentOffset >= options.totalCount || options.itemsReturned(response) == 0)
                     {
@@ -76,7 +97,7 @@ jQuery.fn.autogrow = function (url, template, options)
                     if (options.itemsReturned(response) > 0)
                     {
                         // Create the markup and append it to the container
-                        try { var markup = template.create(response); }
+                        try { var markup = template(response); }
                         catch (e) { } // ignore for now
                         jQuery(markup).appendTo(obj);
 
@@ -87,7 +108,7 @@ jQuery.fn.autogrow = function (url, template, options)
                         if (options.useStorage && getDataLength(localData) + options.offset == currentOffset)
                         {
                             localData.push(response);
-                            if (!jQuery.jStorage.set("autogrowStorage", localData))
+                            if (!jQuery.jStorage.set("autobrowseStorage", localData))
                                 // Storage failed, remove last pushed response
                                 localData.pop();
                         }
@@ -96,7 +117,7 @@ jQuery.fn.autogrow = function (url, template, options)
                         currentOffset += options.itemsReturned(response);
                         if (options.useStorage)
                         {
-                            jQuery.jStorage.set("autogrowOffset", currentOffset);
+                            jQuery.jStorage.set("autobrowseOffset", currentOffset);
                         }
                     }
 
@@ -109,32 +130,32 @@ jQuery.fn.autogrow = function (url, template, options)
 
         var startPlugin = function()
         {
-            var autogrowScrollTop = jQuery.jStorage.get("autogrowScrollTop");
-            if (autogrowScrollTop)
-                jQuery(window).scrollTop(autogrowScrollTop);
+            var autobrowseScrollTop = jQuery.jStorage.get("autobrowseScrollTop");
+            if (autobrowseScrollTop)
+                jQuery(window).scrollTop(autobrowseScrollTop);
             jQuery(window).scroll(scrollCallback);
         };
 
 
         if (options.useStorage)
         {
-            if (jQuery.jStorage.get("autogrowStorageKey") != url)
+            if (jQuery.jStorage.get("autobrowseStorageKey") != url)
             {
                 jQuery.jStorage.flush();
             }
 
-            localData= jQuery.jStorage.get("autogrowStorage");
+            localData= jQuery.jStorage.get("autobrowseStorage");
             if (localData)
             {
                 // for each stored ajax response
                 for (var i = 0; i < localData.length; i++)
                 {
-                    var markup = template.create(localData[i]);
+                    var markup = template(localData[i]);
                     jQuery(markup).appendTo(obj);
                     currentOffset += options.itemsReturned(localData[i]);
                     options.onComplete.call(obj, localData[i]);
                 }
-                var offsetDifference = jQuery.jStorage.get("autogrowOffset") - currentOffset;
+                var offsetDifference = jQuery.jStorage.get("autobrowseOffset") - currentOffset;
                 if (offsetDifference > 0)
                 {
                     // Storage didn't contain enough items, need to fetch them via ajax
@@ -143,7 +164,7 @@ jQuery.fn.autogrow = function (url, template, options)
                     loading = true;
                     jQuery.post(url + "/" + currentOffset + "/" + offsetDifference, function (response) {
                         // Create the markup and append it to the container
-                        try { var markup = template.create(response); }
+                        try { var markup = template(response); }
                         catch (e) { } // ignore for now
                         jQuery(markup).appendTo(obj);
                         // Call user onComplete callback
@@ -162,10 +183,10 @@ jQuery.fn.autogrow = function (url, template, options)
             else
             {
                 localData = [];
-                jQuery.jStorage.set("autogrowOffset", currentOffset);
-                jQuery.jStorage.set("autogrowStorageKey", url);
-                jQuery.jStorage.set("autogrowStorage", localData);
-                jQuery.jStorage.set("autogrowScrollTop", 0);
+                jQuery.jStorage.set("autobrowseOffset", currentOffset);
+                jQuery.jStorage.set("autobrowseStorageKey", url);
+                jQuery.jStorage.set("autobrowseStorage", localData);
+                jQuery.jStorage.set("autobrowseScrollTop", 0);
                 startPlugin();
             }
         }
