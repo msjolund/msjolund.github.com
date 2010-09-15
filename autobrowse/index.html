@@ -92,7 +92,7 @@ $(".page").autobrowse(
     var markup='';
     for (var i=0; i&lt;response.items.length; i++)
     {
-      markup+='&lt;a href="'+response.items[i].link+'"&gt;&lt;img src="'+response.items[i].media.m+'" />&lt;/a&gt;'
+      markup+='&lt;a href="'+response.items[i].link+'"&gt;&lt;img src="'+response.items[i].media.m+'" /&gt&lt;/a&gt;'
     }
     return markup;
   },
@@ -100,7 +100,7 @@ $(".page").autobrowse(
   count: 20,
   offset: 0,
   totalCount: 100,
-  loader: '&lt;div class="loader">&lt;/div>',
+  loader: '&lt;div class="loader">&lt;/div&gt;',
   useCache: true
 );
     </pre>
