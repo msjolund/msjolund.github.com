@@ -90,9 +90,9 @@ $(".page").autobrowse(
   template: function (response)
   {
     var markup='';
-    for (var i=0; i<response.items.length; i++)
+    for (var i=0; i&lt;response.items.length; i++)
     {
-      markup+='&lt;a href="'+response.items[i].link+'">&lt;img src="'+response.items[i].media.m+'" />&lt;/a>'
+      markup+='&lt;a href="'+response.items[i].link+'"&gt;&lt;img src="'+response.items[i].media.m+'" />&lt;/a&gt;'
     }
     return markup;
   },
