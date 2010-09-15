@@ -31,10 +31,10 @@
             left: 0; top: 0;
             height: 400px;
             width: 100%;
-            background-color: #000; /* for non-css3 browsers */
-            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000'); /* for IE */
-            background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#000)); /* for webkit browsers */
-            background: -moz-linear-gradient(top,  #ccc,  #000); /* for firefox 3.6+ */
+            background-color: #000;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000');
+            background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#000));
+            background: -moz-linear-gradient(top,  #ccc,  #000);
         }
         div.page {
             position: relative;
@@ -51,7 +51,22 @@
             padding: 10px;
         }
         div.items img {
-
+            margin: 10px 5px;
+            height: 150px;
+        }
+        div.loader {
+            font-style: italic;
+            text-align: center;
+            margin: 20px;
+            height: 24px;
+            background: url(loader.gif) no-repeat center center;
+        }
+        pre {
+            background-color: #FBFBFB;
+            font-size: 11px;
+            border-left: 3px solid #CCCCCC;
+            padding: 10px;
+            margin: 0 20px 30px;
         }
     </style>
 </head>
@@ -61,29 +76,68 @@
     <div style="clear: both;"></div>
     <h1>Autobrowse jQuery plugin</h1>
     <p>Download and more documentation: <a href="jquery.esn.autobrowse.js">jquery.esn.autobrowse.js</a></p>
-    <p><img class="me" height="48" width="48" alt="" src="http://www.gravatar.com/avatar/446d77c917d0c07ba598f56e5d08caa2?s=140&d=http%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>This plugin adds automatic ajax loading of page content when the user scrolls the page. It comes with a browser cache, which solves the problem of a user clicking away from the page, and then goes back and ends up in the beginning of the page, instead of where she was looking.</p>
+
+
+    <p><b>Example usage:</b></p>
+    <pre>
+
+$(".page").autobrowse(
+  urlBuilder: function (offset, count)
+  {
+    return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
+  },
+  template: function (response)
+  {
+    var markup='';
+    for (var i=0; i<response.items.length; i++)
+    {
+      markup+='&lt;a href="'+response.items[i].link+'">&lt;img src="'+response.items[i].media.m+'" />&lt;/a>'
+    }
+    return markup;
+  },
+  itemsReturned: function (response) { return response.items.length; },
+  count: 20,
+  offset: 0,
+  totalCount: 100,
+  loader: '&lt;div class="loader">&lt;/div>',
+  useCache: true
+);
+    </pre>
+    <p><b>Demo:</b> Scroll down for more cats</p>
 
     <div class="items">
     </div>
 
     <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="jquery.esn.autobrowse.js"></script>
+    <script type="text/javascript" src="jquery.json-2.2.min.js"></script>
     <script type="text/javascript" src="jstorage.js"></script>
     <script type="text/javascript">
-
         $(function () {
-            
-            $(".page").autobrowse(
-                function (offset, count) { console.debug("building url"); return "http://services.digg.com/2.0/search.search?query=jquery&offset=OFFSET&count=COUNT&format=xml&callback=?".replace(/OFFSET/, offset).replace(/COUNT/, count);},
-                //function (offset, count) { console.debug("building url"); return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?".replace(/OFFSET/, offset).replace(/COUNT/, count) },
-                function (response) { console.debug(response); var markup=''; for (var i=0; i<response.items.length; i++) { markup+='<img src="'+response.items[i]+'" />' }; return markup; },
+            $(".page .items").autobrowse(
                 {
-                    itemsReturned: function (response) { return 10; },
-                    count: 10,
+                    urlBuilder: function (offset, count)
+                    {
+                        return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
+                    },
+                    template: function (response)
+                    {
+                        var markup='';
+                        for (var i=0; i<response.items.length; i++)
+                        {
+                            markup+='<a href="'+response.items[i].link+'"><img src="'+response.items[i].media.m+'" /></a>'
+                        };
+                        return markup;
+                    },
+                    itemsReturned: function (response) { return response.items.length; },
+                    count: 20,
                     offset: 0,
-                    totalCount: 100
-                });
+                    totalCount: 100,
+                    loader: '<div class="loader"></div>',
+                    useCache: true
+                }
+            );
         });
     </script>
 </div>

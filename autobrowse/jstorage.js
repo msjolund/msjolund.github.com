@@ -111,7 +111,7 @@
 						}
 					}else{
 						this._storage_elm = null;
-						return;
+						return "";
 					}
 				}
 				/* if jStorage string is retrieved, then decode it */ 
