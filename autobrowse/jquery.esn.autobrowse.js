@@ -76,7 +76,7 @@ jQuery.fn.autobrowse = function (options)
 
         var scrollCallback = function ()
         {
-            var scrollTop = jQuery(window).scrollTop();
+            var scrollTop = window.pageYOffset ? window.pageYOffset : jQuery(window).scrollTop();
             var objBottom = obj.height() + obj.offset().top;
             var winBtmPos = scrollTop + jQuery(window).height();
             if (scrollTopUpdateTimer)
@@ -132,7 +132,10 @@ jQuery.fn.autobrowse = function (options)
             if (options.useCache)
                 var autobrowseScrollTop = jQuery.jStorage.get("autobrowseScrollTop");
             if (autobrowseScrollTop)
-                jQuery(window).scrollTop(autobrowseScrollTop);
+                if (window.pageYOffset)
+                    window.pageYOffset = autobrowseScrollTop;
+                else
+                    jQuery(window).scrollTop(autobrowseScrollTop);
             jQuery(window).scroll(scrollCallback);
             scrollCallback();
         };
