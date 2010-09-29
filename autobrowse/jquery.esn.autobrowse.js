@@ -27,15 +27,8 @@
  *                  clicks away from the page and then goes back, all items fetched will be rendered again, and the
  *                  user will see the same view as when he left the page. Requires http://www.jstorage.info/.
  *                  WARNING: This doesn't work with original jStorage. A modified version is
- *                  available on http://github.com/msjolund/jquery.esn.autobrowse.js. jStorage also
+ *                  available on http://github.com/msjolund/jquery-esn-autobrowse. jStorage also
  *                  requires jquery-json: http://code.google.com/p/jquery-json/.
- *
- *
- *
- *
- *
- * Example usage
- *           
  *
  *
  *
@@ -54,7 +47,7 @@ jQuery.fn.autobrowse = function (options)
         onComplete: function (response) {},
         useCache: false
     };
-    
+
     options = jQuery.extend(defaults, options);
 
     var getDataLength = function (data)
@@ -71,14 +64,14 @@ jQuery.fn.autobrowse = function (options)
         var localData, obj = jQuery(this);
         var currentOffset = options.offset;
         var loading = false;
-        
         var scrollTopUpdateTimer = null;
 
         var scrollCallback = function ()
         {
             var scrollTop = jQuery(window).scrollTop();
             var objBottom = obj.height() + obj.offset().top;
-            var winBtmPos = scrollTop + jQuery(window).height();
+            var winHeight = window.innerHeight ? window.innerHeight : $(window).height();
+            var winBtmPos = scrollTop + winHeight;
             if (scrollTopUpdateTimer)
                 clearTimeout(scrollTopUpdateTimer);
             scrollTopUpdateTimer = setTimeout(function () { jQuery.jStorage.set("autobrowseScrollTop", scrollTop); }, 200);
@@ -197,5 +190,4 @@ jQuery.fn.autobrowse = function (options)
         }
     });
 };
-
 })( jQuery );
