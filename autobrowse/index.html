@@ -83,7 +83,7 @@
     <pre>
 
 $(".page").autobrowse(
-  urlBuilder: function (offset, count)
+  url: function (offset, count)
   {
     return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
   },
@@ -104,10 +104,10 @@ $(".page").autobrowse(
   useCache: true
 );
     </pre>
-    
+
     <p>Note that the demo urlBuilder does not use offset and count in the url. See the source code for more examples and option details.</p>
 
-    <p><b>Demo:</b> Scroll down for more cats</p>
+    <p><b>Demo:</b> Scroll down for more cats (<a href="#clearcache" id="clear_cache">Clear cache</a>)</p>
 
     <div class="items">
     </div>
@@ -118,9 +118,14 @@ $(".page").autobrowse(
     <script type="text/javascript" src="jstorage.js"></script>
     <script type="text/javascript">
         $(function () {
+            $("#clear_cache").click( function (e) {
+                e.preventDefault();
+                $('.page').autobrowse('flush');
+            })
+
             $(".page .items").autobrowse(
                 {
-                    urlBuilder: function (offset, count)
+                    url: function (offset, count)
                     {
                         return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
                     },
@@ -138,7 +143,8 @@ $(".page").autobrowse(
                     offset: 0,
                     totalCount: 100,
                     loader: '<div class="loader"></div>',
-                    useCache: true
+                    useCache: true,
+                    expiration: 1
                 }
             );
         });
