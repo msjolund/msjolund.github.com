@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.esn.autobrowse.js</title>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css">
+    <style type="text/css">
+        html {
+            background-color: #000;
+        }
+        body {
+            font-family: arial;
+            background-color: #000;
+        }
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px;
+        }
+        h2 {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+        }
+        p {
+            font-size: 12px;
+            line-height: 18px;
+            padding: 10px;
+        }
+        div.bkg {
+            position: absolute;
+            left: 0; top: 0;
+            height: 400px;
+            width: 100%;
+            background-color: #000;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000');
+            background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#000));
+            background: -moz-linear-gradient(top,  #ccc,  #000);
+        }
+        div.page {
+            position: relative;
+            background: white;
+            width: 760px;
+            margin: auto;
+            padding: 10px;
+        }
+        img.me {
+            float: left;
+            margin-right: 10px;
+        }
+        div.items {
+            padding: 10px;
+        }
+        div.loader {
+            font-style: italic;
+            text-align: center;
+            margin: 20px;
+            height: 24px;
+            background: url(loader.gif) no-repeat center center;
+        }
+        pre {
+            background-color: #FBFBFB;
+            font-size: 11px;
+            border-left: 3px solid #CCCCCC;
+            padding: 10px;
+            margin: 0 20px 30px;
+            overflow: auto;
+        }
+        .tweet {
+            font-size: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+            width: 370px;
+            margin: 0 auto;
+        }
+        .tweet p {
+            margin-left: 60px;
+            padding: 0;
+            line-height: 16px;
+        }
+        .tweet img {
+            vertical-align: top;
+            float: left;
+        }
+        strong {
+            float: left;
+            font-weight: bold;
+            margin: 0 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="bkg"></div>
+<div class="page">
+    <div style="clear: both;"></div>
+    <h1>Autobrowse jQuery plugin</h1>
+    <p><a href="index.html">Back to API</a></p>
+    <h2>Twitter timeline demo</h2>
+
+    <p><b>Usage:</b></p>
+    <pre>
+$(".page .items").autobrowse(
+{
+    url: function (offset)
+    {
+        return "http://twitter.com/status/user_timeline/ParisHilton.json?count=10&page=OFFSET&callback=?".replace(/OFFSET/, 1+Math.round(offset/10));
+    },
+    template: function (response)
+    {
+        var markup='';
+        for (var i=0; i&lt;response.length; i++)
+        {
+            markup += '&lt;div class="tweet"&gt;';
+            markup += '&lt;img src="' + response[i].user.profile_image_url + '" /&gt;';
+            markup += '&lt;p&gt;&lt;strong&gt;' + response[i].user.name + '&lt;/strong&gt;';
+            markup += response[i].text;
+            markup += '&lt;/p&gt;&lt;div style="clear: both;"&gt;&lt;/div&gt;&lt;/div&gt;';
+        }
+        return markup;
+    },
+    itemsReturned: function (response) { return response.length; },
+    max: 50,
+    sensitivity: 100,
+    finished: function () { $(this).append('&lt;p style="text-align:center"&gt;Nothing more to show&lt;/p&gt;') }
+}
+);
+    </pre>
+
+
+    <p><b>Demo:</b> Scroll down for more tweets from Paris Hilton (<a href="#clearcache" id="clear_cache">Clear cache</a>)</p>
+
+    <div class="items">
+    </div>
+
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery.esn.autobrowse.js"></script>
+    <script type="text/javascript" src="jquery.json-2.2.min.js"></script>
+    <script type="text/javascript" src="jstorage.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#clear_cache").click( function (e) {
+                e.preventDefault();
+                $('.page .items').autobrowse('flush');
+            })
+
+            $(".page .items").autobrowse(
+                {
+                    url: function (offset)
+                    {
+                        return "http://twitter.com/status/user_timeline/ParisHilton.json?count=10&page=OFFSET&callback=?".replace(/OFFSET/, 1+Math.round(offset/10));
+                    },
+                    template: function (response)
+                    {
+                        var markup='';
+                        for (var i=0; i<response.length; i++)
+                        {
+                            markup += '<div class="tweet">';
+                            markup += '<img src="' + response[i].user.profile_image_url + '" />';
+                            markup += '<p><strong>' + response[i].user.name + '</strong>';
+                            markup += response[i].text;
+                            markup += '</p><div style="clear: both;"></div></div>';
+                        }
+                        return markup;
+                    },
+                    itemsReturned: function (response) { return response.length; },
+                    max: 50,
+                    sensitivity: 100,
+                    finished: function () { $(this).append('<p style="text-align:center">Nothing more to show</p>') }
+                }
+            );
+        });
+    </script>
+</div>
+</body>
+</html>

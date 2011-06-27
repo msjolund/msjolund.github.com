@@ -69,6 +69,11 @@
             margin: 0 20px 30px;
             overflow: auto;
         }
+        p.note {
+            color: #777;
+            font-size: 11px;
+            padding: 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -76,38 +81,42 @@
 <div class="page">
     <div style="clear: both;"></div>
     <h1>Autobrowse jQuery plugin</h1>
-    <p>Download and options details: <a href="http://github.com/msjolund/jquery-esn-autobrowse">jquery.esn.autobrowse.js</a>. LICENCE: Do whatever you want with the code. We don't take any responsibility for how you use it.</p>
     <p>This plugin adds automatic ajax loading of page content when the user scrolls the page, with built-in browser cache. More info in <a href="http://pushingtheweb.com/2010/09/endless-scroller-jquery-plugin/">this blog post</a>. Simply use autobrowse(options) on a container that you want to fill with content.</p>
+    <p>Download and docs: <a href="http://github.com/msjolund/jquery-esn-autobrowse">jquery.esn.autobrowse.js</a>.</p>
+    <p>LICENCE: Do whatever you want with the code. I don't take any responsibility for how you use it.
 
     <p><b>Example usage:</b></p>
     <pre>
-
-$(".page").autobrowse(
-  url: function (offset, count)
-  {
-    return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
-  },
-  template: function (response)
-  {
-    var markup='';
-    for (var i=0; i&lt;response.items.length; i++)
+$(".page .items").autobrowse(
     {
-      markup+='&lt;a href="'+response.items[i].link+'"&gt;&lt;img src="'+response.items[i].media.m+'" /&gt&lt;/a&gt;'
+        url: function (offset)
+        {
+            return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
+        },
+        template: function (response)
+        {
+            var markup='';
+            for (var i=0; i&lt;response.items.length; i++)
+            {
+                markup+='&lt;a href="'+response.items[i].link+'"&gt;&lt;img src="'+response.items[i].media.m+'" /&gt;&lt;/a&gt;'
+            };
+            return markup;
+        },
+        itemsReturned: function (response) { return response.items.length; },
+        offset: 0,
+        max: 100,
+        loader: '&lt;div class="loader"&gt;&lt;/div&gt;',
+        useCache: true,
+        expiration: 1
     }
-    return markup;
-  },
-  itemsReturned: function (response) { return response.items.length; },
-  count: 20,
-  offset: 0,
-  totalCount: 100,
-  loader: '&lt;div class="loader">&lt;/div&gt;',
-  useCache: true
 );
     </pre>
 
-    <p>Note that the demo urlBuilder does not use offset and count in the url. See the source code for more examples and option details.</p>
 
-    <p><b>Demo:</b> Scroll down for more cats (<a href="#clearcache" id="clear_cache">Clear cache</a>)</p>
+
+    <p><b>Demo:</b> Scroll down for more cats. <a href="twitterdemo.html">Demo using Twitter API</a> (New!)</p>
+    <p class="note">Note that the demo url does not use offset in the url, so it loads the same data every time.</p>
+    <p><a href="#clearcache" id="clear_cache">Clear cache</a></p>
 
     <div class="items">
     </div>
@@ -120,12 +129,12 @@ $(".page").autobrowse(
         $(function () {
             $("#clear_cache").click( function (e) {
                 e.preventDefault();
-                $('.page').autobrowse('flush');
+                $('.page .items').autobrowse('flush');
             })
 
             $(".page .items").autobrowse(
                 {
-                    url: function (offset, count)
+                    url: function (offset)
                     {
                         return "http://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?";
                     },
@@ -139,9 +148,8 @@ $(".page").autobrowse(
                         return markup;
                     },
                     itemsReturned: function (response) { return response.items.length; },
-                    count: 20,
                     offset: 0,
-                    totalCount: 100,
+                    max: 100,
                     loader: '<div class="loader"></div>',
                     useCache: true,
                     expiration: 1
